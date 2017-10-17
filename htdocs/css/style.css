@@ -1,0 +1,164 @@
+body {
+    margin: 0 auto;
+    max-width: 900px;
+    margin-bottom: 4em;
+    font-size: 100%;
+}
+
+.main-wrap,
+.commentsection {
+    padding: 20px;
+}
+
+.footer {
+    /*position: absolute;*/
+    /*bottom: 0;*/
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    background-color: #f5f5f5;
+}
+
+#questionbutton {
+
+}
+
+#questionbutton {
+    width: 140px;
+    text-align: center;
+    background-color: #00a5ff;
+    padding: 4px;
+    border: 1px solid #abbde1;
+    box-shadow: inset 0 1px 0 #66bfff;
+    border-radius: 3px;
+    -webkit-transition: background-color 2s ease-out;
+    -moz-transition: background-color 2s ease-out;
+    -o-transition: background-color 2s ease-out;
+    transition: background-color 2s ease-out;
+}
+
+#questionbutton:hover {
+    background-color: darkblue;
+}
+
+#questionbutton a {
+    text-decoration: none;
+    color: #f7ffff;
+}
+
+.clear {
+    clear: both;
+}
+
+/* USERS PAGE */
+
+
+.users .user-wrap {
+    width: 250px;
+}
+
+.users .gravatar img{
+    width: 80px;
+}
+
+.users .acronym {
+
+}
+
+.users .user-wrap {
+    margin-bottom: 8px;
+    /*line-height: 104px;*/
+}
+.users .user-wrap a:hover {
+    color: #6eb4ff;
+    text-decoration: none;
+}
+
+
+/* CREATE QUESTION FORM */
+
+output {
+    width: 100%;
+}
+
+#form-element-questiontitle,
+#form-element-answertitle {
+    width: 100%;
+    height: 50px;
+}
+
+#form-element-questiontext,
+#form-element-answertext,
+#form-element-commenttext {
+    width: 100%;
+    height: 300px;
+}
+
+#form-element-tags {
+    width: 50%;
+    height: 100px;
+}
+
+/* QUESTION PAGE */
+
+.question-wrap,
+.answer {
+    border-bottom: 1px solid #e4e6e8;
+    padding: 16px;
+    font-size: 1.3rem;
+    overflow:auto;
+}
+
+.created {
+    font-size: 1rem;
+    color: #acacac;
+}
+
+.gravatar {
+    padding: 12px 12px 12px 0;
+    width: 50px;
+}
+
+.gravatar img {
+    border-radius: 50%;
+    width: 50px;
+}
+
+.user-wrap {
+    width: 300px;
+    background-color: #E0EAF1;
+    padding: 8px;
+    border-radius: 3px;
+}
+
+.acronym {
+    padding: 12px 0 0 0;
+    font-size: 1.1rem;
+}
+
+.container-fluid {
+    padding-top: 20px;
+}
+
+nav {
+    width: 100%;
+}
+
+.logout-link {
+    float:right;
+}
+
+/* COMMENTS */
+
+.comments-question {
+    margin-left: 200px;
+}
+.comment {
+    border-bottom: 1px solid lightgray;
+    padding: 6px;
+    overflow:auto;
+}
+
+.comment-form-question {
+    /*display: none;*/
+}

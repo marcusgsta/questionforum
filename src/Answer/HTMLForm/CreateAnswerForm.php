@@ -81,8 +81,8 @@ class CreateAnswerForm extends FormModel
         if (!isset($answertitle, $answertext)) {
             $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
             $this->form->addOutput(
-                "<div class='alert alert-danger alert-dismissable'>
-                . $link . Försök igen. Skrev du både titel och text?</div>"
+                "<div class='alert alert-danger alert-dismissable'>"
+                . $link . "Försök igen. Skrev du både titel och text?</div>"
             );
             return false;
         }
@@ -98,7 +98,7 @@ class CreateAnswerForm extends FormModel
         $answer->save();
         $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
         $this->form->addOutput(
-            "<div class='alert alert-success alert-dismissable'> . $link . Tack för ditt svar!</div>"
+            "<div class='alert alert-success alert-dismissable'>" . $link . "Tack för ditt svar!</div>"
         );
         return true;
     }

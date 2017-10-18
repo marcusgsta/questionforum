@@ -83,8 +83,8 @@ class CreateQuestionForm extends FormModel
         if (!isset($questiontitle, $questiontext)) {
             $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
             $this->form->addOutput(
-                "<div class='alert alert-danger alert-dismissable'>
-                . $link . Försök igen. Skrev du både titel och text?</div>"
+                "<div class='alert alert-danger alert-dismissable'>"
+                . $link . "Försök igen. Skrev du både titel och text?</div>"
             );
             return false;
         }
@@ -152,8 +152,8 @@ class CreateQuestionForm extends FormModel
 
         $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
         $this->form->addOutput(
-            "<div class='alert alert-success alert-dismissable'>
-            . $link . Tack för din fråga!</div>"
+            "<div class='alert alert-success alert-dismissable'>"
+            . $link . "Tack för din fråga!</div>"
         );
         return true;
     }

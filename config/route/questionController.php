@@ -9,7 +9,7 @@ return [
             "info" => "Question Controller get all questions.",
             "requestMethod" => "get",
             "path" => "show-all",
-            "callable" => ["questionController", "getAllQuestions"],
+            "callable" => ["questionController", "getShowAllQuestions"],
         ],
         [
             "info" => "Question Controller show one question.",

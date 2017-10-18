@@ -23,6 +23,11 @@ return [
             "file" => __DIR__ . "/route/debug.php",
         ],
         [
+            // Get index route/
+            "mount" => null,
+            "file" => __DIR__ . "/route/main.php",
+        ],
+        [
             // To read flat file content in Markdown from content/
             "mount" => null,
             "file" => __DIR__ . "/route/flat-file-content.php",

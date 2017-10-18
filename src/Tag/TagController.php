@@ -126,4 +126,63 @@ class TagController implements InjectionAwareInterface
         });
         return $return;
     }
+
+
+
+    /**
+    * get the most popular tags
+    *
+    * @return array $tags
+    */
+    public function getPopularTags()
+    {
+        // Get all tags from table Tag
+        $tag = new Tag();
+        $tag->setDb($this->di->get("db"));
+        $groupby = "tagtext";
+        $tagObjects = $tag->findAll($groupby);
+
+        // Get questions for each tag
+        foreach ($tagObjects as $tagObject) {
+            $tagObject = $this->expandTagObjectWithQuestions($tagObject);
+        }
+
+        // Count questions
+        //$countedTags = [];
+        foreach ($tagObjects as $tagObject) {
+                $tagObject->count = count($tagObject->question);
+            // $key = $tagObject->tagtext;
+            // $countedTags[$key] = count($tagObject->question);
+        }
+
+        // Sort according to popularity - descending order
+        //arsort($countedTags);
+        //usort($tagObjects, array($this, "cmp"));
+        usort($tagObjects, function ($one, $two) {
+            return strcmp($two->count, $one->count);
+        });
+
+        return $tagObjects;
+    }
+
+
+    /**
+    * @param integer questionid
+    * @return array array of tagObjects
+    */
+    public function getQuestionTags($questionid)
+    {
+        $tag = new Tag();
+        $tag->setDb($this->di->get("db"));
+        // $sql = "SELECT * FROM Tag INNER JOIN TagQuestion
+        // ON Tag.questionid = Tagquestion.questionid";
+        $table = "Tagquestion";
+        $condition = "Tag.id = Tagquestion.tagid";
+        $where = "Tagquestion.questionid = ?";
+        $value = $questionid;
+
+        $questionTags = $tag->findAllWhereJoin($table, $condition, $where, $value);
+
+        return $questionTags;
+    }
 }

@@ -1,5 +1,4 @@
 <div class="question-section">
-<h2>Vy för en fråga</h2>
 <?php $url = $this->url("question/create"); ?>
 <div id="questionbutton" class="float-right">
 <a href="<?=$url?>" class="">Ställ en fråga</a>
@@ -18,11 +17,19 @@ $answers = $data['answers'];
 <div class="question-wrap clear">
 
     <div class="question">
-        <h2><?=$question->questiontitle;?></h2>
+        <h2><?=$question->questiontitle->text;?></h2>
         <p><?=$question->questiontext->text;?></p>
 
         <div class="share">
-            <a href="#">Share</a>
+            <!-- <a href="#">Share</a> -->
+<?php
+$tags = $question->tags;
+foreach ($tags as $tag):
+$tagid = $tag->id;
+$route = $this->url("tag/$tagid");
+?>
+            <span class="tag float-left"><a href="<?=$route;?>"><?=$tag->tagtext->text;?></a></span>
+<?php endforeach; ?>
         </div>
 
         <div class="user-wrap float-right">

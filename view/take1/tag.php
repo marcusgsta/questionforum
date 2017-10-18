@@ -8,7 +8,7 @@ $questions = $tag->question;
 ?>
 
 <div class="question-wrap">
-
+<h1>Frågor med taggen '<?=$tag->tagtext?>'</h1>
 <?php
 foreach ($questions as $question) :
     $questionid = $question->id;

@@ -10,6 +10,7 @@ use \Marcusgsta\Question\HTMLForm\CreateQuestionForm;
 use \Marcusgsta\Answer\HTMLForm\CreateAnswerForm;
 use \Marcusgsta\Comment\CommentController;
 use \Marcusgsta\HTMLForm\CreateCommentForm;
+use \Marcusgsta\Tag\TagController;
 
 /**
  * A class for everything to do with questions.
@@ -22,12 +23,21 @@ class QuestionController implements InjectionAwareInterface
     /**
     * Get questions from table
     */
-    public function getAllQuestions()
+    public function getShowAllQuestions()
     {
         $title      = "De senaste frågorna";
         $view       = $this->di->get("view");
         $pageRender = $this->di->get("pageRender");
 
+        $questions = $this->getAllQuestions();
+
+        $view->add("take1/questions", $questions);
+
+        $pageRender->renderPage(["title" => $title]);
+    }
+
+    public function getAllQuestions()
+    {
         $question = new Question();
         $question->setDb($this->di->get("db"));
         $orderby = "id DESC";
@@ -60,11 +70,9 @@ class QuestionController implements InjectionAwareInterface
             $obj->user = $user->getUser($obj->userid);
             return true;
         });
-        $questions = $newArray;
+        $allQuestions = $newArray;
 
-        $view->add("take1/questions", $questions);
-
-        $pageRender->renderPage(["title" => $title]);
+        return $allQuestions;
     }
 
     /**
@@ -81,10 +89,15 @@ class QuestionController implements InjectionAwareInterface
         $question = $question->find("id", $id);
 
         // escape output
+        $question->questiontitle = htmlspecialchars($question->questiontitle);
+
         $question->questiontext = htmlspecialchars($question->questiontext);
 
         // filter output with filters
         $textfilter = new TextFilter;
+
+        $question->questiontitle = $textfilter->parse($question->questiontitle, ["markdown"]);
+
         $question->questiontext = $textfilter->parse($question->questiontext, ["markdown"]);
 
         // Get user object and add as key to the question object
@@ -95,6 +108,16 @@ class QuestionController implements InjectionAwareInterface
         // set questionid variable
         $questionid = $question->id;
 
+        // Get tag objects and add as key to the question object
+        $tags = $this->di->get("tagController");
+        $tags = $tags->getQuestionTags($questionid);
+
+        foreach ($tags as $tag) {
+            $tag->tagtext = htmlspecialchars($tag->tagtext);
+            $tag->tagtext = $textfilter->parse($tag->tagtext, ["markdown"]);
+        }
+
+        $question->tags = $tags;
         // COMMENT-FORM-QUESTION
 
         // call function to get createCommentForm for question
@@ -106,7 +129,7 @@ class QuestionController implements InjectionAwareInterface
         $allComments = $allComments->getComments();
 
         // filter out comments for questions
-        $newArray = array_filter($allComments, function ($obj) {
+        $newArray = array_filter($allComments, function ($obj) use ($questionid) {
 
             // Get user object and add as key to the commentsQuestion object
             $user = new User;
@@ -114,7 +137,8 @@ class QuestionController implements InjectionAwareInterface
             $obj->user = $user->getUser($obj->userid);
 
             // return comments that have a questionid
-            return $obj->questionid != null;
+            // return $obj->questionid != null;
+            return $obj->questionid == $questionid;
         });
         $commentsQuestion = $newArray;
 
@@ -151,8 +175,6 @@ class QuestionController implements InjectionAwareInterface
                 $obj->user = $user->getUser($obj->userid);
             });
         });
-
-
 
         $data = [
             "question" => $question,
@@ -215,5 +237,73 @@ class QuestionController implements InjectionAwareInterface
         $form       = new CreateCommentForm($this->di, $questionid, $answerid);
         $form->check();
         return $form->getHTML();
+    }
+
+
+    /**
+    * Show Index Page
+    *
+    */
+    public function showIndexPage()
+    {
+        $title      = "Ett forum om allt mellan himmel och jord";
+        $view       = $this->di->get("view");
+        $pageRender = $this->di->get("pageRender");
+
+        $latestQuestions = $this->getLatestQuestions();
+
+        $popularTags = $this->di->get("tagController");
+        $popularTags = $popularTags->getPopularTags();
+
+        //$users = $this->di->get("userController");
+        $mostActiveUsers = $this->getMostActiveUsers();
+
+        $data = [
+            "latestQuestions" => $latestQuestions,
+            "popularTags" => $popularTags,
+            "mostActiveUsers" => $mostActiveUsers
+        ];
+
+        $view->add("take1/index", $data);
+
+        $pageRender->renderPage(["title" => $title]);
+    }
+
+
+    /**
+    * get the 4 latest questions
+    *
+    * @return array $questions
+    */
+    public function getLatestQuestions()
+    {
+        $allQuestions = $this->getAllQuestions();
+        $latestQuestions = array_slice($allQuestions, 0, 3);
+
+        return $latestQuestions;
+    }
+
+
+    /**
+    * get the most active users
+    *
+    * @return array $questions
+    */
+    public function getMostActiveUsers()
+    {
+        $questions = $this->getAllQuestions();
+
+        $user = $this->di->get("userController");
+        $users = $user->getUsers();
+
+        foreach ($users as $user) {
+            foreach ($questions as $question) {
+                if ($question->userid == $user->id) {
+                    $user->count = isset($user->count) ? $user->count : 0;
+                    $user->count += 1;
+                };
+            }
+        }
+        return $users;
     }
 }

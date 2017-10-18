@@ -89,8 +89,8 @@ class CreateCommentForm extends FormModel
         if (!isset($commenttext)) {
             $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
             $this->form->addOutput(
-                "<div class='alert alert-danger alert-dismissable'>
-                . $link . Försök igen. Skrev du ingen kommentar?</div>"
+                "<div class='alert alert-danger alert-dismissable'>"
+                . $link . "Försök igen. Skrev du ingen kommentar?</div>"
             );
             return false;
         }
@@ -106,8 +106,8 @@ class CreateCommentForm extends FormModel
         $comment->save();
         $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
         $this->form->addOutput(
-            "<div class='alert alert-success alert-dismissable'>
-            . $link . Tack för din kommentar!</div>"
+            "<div class='alert alert-success alert-dismissable'>"
+            . $link . "Tack för din kommentar!</div>"
         );
         return true;
     }

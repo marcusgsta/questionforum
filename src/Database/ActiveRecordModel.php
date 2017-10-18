@@ -227,6 +227,34 @@ class ActiveRecordModel
     }
 
 
+    /**
+     * Find and return all matching the search criteria.
+     *
+     * The search criteria `$where` of can be set up like this:
+     *  `id = ?`
+     *  `id IN [?, ?]`
+     *
+     * The `$value` can be a single value or an array of values.
+     *
+     * @param string $where to use in where statement.
+     * @param mixed  $value to use in where statement.
+     *
+     * @return array of object of this class
+     */
+    public function findAllWhereJoinGroup($table, $condition, $where, $value, $groupby)
+    {
+        $this->checkDb();
+        $params = is_array($value) ? $value : [$value];
+        return $this->db->connect()
+                        ->select()
+                        ->from($this->tableName)
+                        ->join($table, $condition)
+                        ->where($where)
+                        ->groupby($groupby)
+                        ->execute($params)
+                        ->fetchAllClass(get_class($this));
+    }
+
 
     /**
      * Save current object/row, insert if id is missing and do an

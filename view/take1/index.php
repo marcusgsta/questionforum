@@ -8,7 +8,9 @@
 
 <?php
 
-$questions = $data;
+$questions = $data['latestQuestions'];
+$popularTags = $data['popularTags'];
+$mostActiveUsers = $data['mostActiveUsers'];
 
 foreach ($questions as $question) : ?>
 
@@ -41,7 +43,30 @@ $url = $this->url("question/show/$id"); ?>
     </div> <!-- end of .user-wrap -->
 
 </div>
+</div><!-- end of .questionssection -->
+<?php endforeach; ?>
 
+    <!-- TAG SECTION -->
 
+<div class="tag-section">
+
+<h3>Populäraste taggar:</h3>
+<?php foreach ($popularTags as $tag) :
+$tagid = $tag->id;
+$route = $this->url("tag/$tagid")
+?>
+
+<li><a href="<?=$route;?>"><?=$tag->tagtext . "  (" . $tag->count . ")";?></a></li>
+
+<?php endforeach; ?>
+</div> <!-- end of tag-section -->
+
+<div class="active-users">
+        <h3>Mest aktiva användare</h3>
+<?php foreach ($mostActiveUsers as $user):
+$userid = $user->id;
+$route = $this->url("user/show/$userid");
+?>
+<li><a href="<?=$route;?>"><?=$user->acronym . " (" . $user->count . " frågor ställda)";?></a></li>
 <?php endforeach; ?>
 </div>

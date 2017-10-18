@@ -14,9 +14,14 @@
         "anax/url": "^1.0",
         "anax/view": "^1.0",
         "mos/cimage": "^0.7.19",
-        "symfony/yaml": "^3.3"
+        "symfony/yaml": "^3.3",
+        "anax/database": "^1.1",
+        "anax/HTMLForm": "^1.0"
     },
     "autoload": {
-        "psr-4": {"Anax\\": "src/"}
+        "psr-4": {
+            "Anax\\": "src/",
+            "Marcusgsta\\": "src/"
+        }
     }
 }

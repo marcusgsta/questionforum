@@ -5,6 +5,7 @@ namespace Marcusgsta\Page;
 use \Anax\DI\InjectionAwareInterface;
 use \Anax\DI\InjectionAwareTrait;
 use \Anax\TextFilter;
+use \Anax\Page\PageRenderInterface;
 
 /**
  * A default page rendering class.

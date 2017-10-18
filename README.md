@@ -17,52 +17,19 @@ Marcusgsta QUESTIONFORUM module.
 
 
 
-
 Install
 ------------------
 
-Install using composer and integrate the module with your Anax installation.
-
-### Install an anax base
+###Clone from Github
 
 ```
-anax create name-of-your-app ramverk1-site-develop
+git clone https://github.com/marcusgsta/questionforum.git
 ```
 
-### Install with composer
+### Update composer
 
 ```
-composer require marcusgsta/questionforum
-```
-
-### Configuration files for Question Forum
-
-```
-rsync -av vendor/marcusgsta/questionforum/config/{database.php,navbar.php,di-for-testing.php} config/
-```
-
-### Config files for testing
-
-```
-rsync -av vendor/marcusgsta/questionforum/config/test config/test/
-```
-
-### Router files
-
-```
-rsync -av vendor/marcusgsta/questionforum/config/route/ config/route/
-```
-
-### Views
-
-```
-rsync -av vendor/marcusgsta/questionforum/view/ view/
-```
-
-### Database files
-
-```
-rsync -av vendor/marcusgsta/questionforum/data/ data/
+composer update
 ```
 
 ### Set permissions on database folder and file
@@ -71,21 +38,6 @@ rsync -av vendor/marcusgsta/questionforum/data/ data/
 sudo chmod 777 data && chmod 666 data/db.sqlite
 ```
 
-### CSS files
-
-```
-rsync -av vendor/marcusgsta/questionforum/htdocs/css/ htdocs/css/
-```
-
-### JS files
-
-```
-rsync -av vendor/marcusgsta/questionforum/htdocs/js/ htdocs/js/
-```
-
-### DI services
-
-You need to add and replace the services from the configuration in `vendor/marcusgsta/questionforum/config/di.php` into your own anax installation `config/di.php`. Services that already exist need to be replaced with the new ones, since they have been edited.
 
 
 ### Database sql files

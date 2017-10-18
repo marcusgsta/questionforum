@@ -81,7 +81,7 @@ return [
         "errorController" => [
             "shared" => true,
             "callback" => function () {
-                $obj = new \Marcusgsta\Page\ErrorController();
+                $obj = new \Anax\Page\ErrorController();
                 $obj->setDI($this);
                 return $obj;
             }
@@ -89,7 +89,7 @@ return [
         "debugController" => [
             "shared" => true,
             "callback" => function () {
-                $obj = new \Marcusgsta\Page\DebugController();
+                $obj = new \Anax\Page\DebugController();
                 $obj->setDI($this);
                 return $obj;
             }
@@ -97,7 +97,7 @@ return [
         "flatFileContentController" => [
             "shared" => true,
             "callback" => function () {
-                $obj = new \Marcusgsta\Page\FlatFileContentController();
+                $obj = new \Anax\Page\FlatFileContentController();
                 $obj->setDI($this);
                 return $obj;
             }

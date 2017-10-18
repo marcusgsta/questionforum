@@ -20,7 +20,7 @@ Marcusgsta QUESTIONFORUM module.
 Install
 ------------------
 
-###Clone from Github
+### Clone from Github
 
 ```
 git clone https://github.com/marcusgsta/questionforum.git

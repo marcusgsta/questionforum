@@ -1,0 +1,27 @@
+machine:
+    php:
+        #version: 5.6.18
+
+
+
+test:
+    pre:
+    - make install
+    - make check
+
+    override:
+    - make test
+
+
+
+# notify:
+#     webhooks:
+#         # canax
+#         - url: https://webhooks.gitter.im/e/c8ff44f50de935adf880
+#         # marcusgsta/comment
+#         - url: https://webhooks.gitter.im/e/f06712430cf588d99e78
+notify:
+  webhooks:
+    # A list of hook hashes, containing the url field
+    # gitter hook
+    url: https://webhooks.gitter.im/e/f06712430cf588d99e78

@@ -93,6 +93,10 @@ class CreateAnswerForm extends FormModel
         $answer->questionid = $questionid;
         $answer->votesum = 0;
 
+        $user = $this->di->get("userController")->getUser($userid);
+        $user->rank = $user->rank + 20;
+        $user->save();
+
         $createdDate = date("G:i:s M jS Y", time());
         $answer->created = $createdDate;
 

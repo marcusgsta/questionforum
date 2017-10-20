@@ -368,8 +368,14 @@ class QuestionController implements InjectionAwareInterface
         //$sql = "UPDATE question SET votesum = votesum + $score";
         if ($score == 1) {
             $question->votesum = $question->votesum + 1;
+            $user = $this->di->get("userController")->getUser($question->userid);
+            $user->rank = $user->rank + 1;
+            $user->save();
         } elseif ($score == 0) {
             $question->votesum = $question->votesum - 1;
+            $user = $this->di->get("userController")->getUser($question->userid);
+            $user->rank = $user->rank - 1;
+            $user->save();
         }
         $question->save();
 
@@ -379,6 +385,7 @@ class QuestionController implements InjectionAwareInterface
         $votequestion->userid = $userid;
         $votequestion->questionid = $questionid;
         $votequestion->save();
+
         // redirect to previous page
         $url = $this->di->get("request")->getServer('HTTP_REFERER');
         $url = $url . "#question-" . $questionid;
@@ -386,10 +393,10 @@ class QuestionController implements InjectionAwareInterface
         return true;
 
         // redirect to previous page
-        $url = $this->di->get("request")->getServer('HTTP_REFERER');
-        $url = $url . "#question-" . $questionid;
-        $this->di->get("response")->redirect($url);
-        return true;
+        // $url = $this->di->get("request")->getServer('HTTP_REFERER');
+        // $url = $url . "#question-" . $questionid;
+        // $this->di->get("response")->redirect($url);
+        // return true;
     }
 
     /**

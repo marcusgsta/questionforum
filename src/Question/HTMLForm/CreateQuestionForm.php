@@ -94,6 +94,10 @@ class CreateQuestionForm extends FormModel
         $question->userid = $userid;
         $question->votesum = 0;
 
+        $user = $this->di->get("userController")->getUser($userid);
+        $user->rank = $user->rank + 10;
+        $user->save();
+
         $createdDate = date("G:i:s M jS Y", time());
         $question->created = $createdDate;
         if (isset($tag)) {

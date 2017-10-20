@@ -166,5 +166,13 @@ return [
                 return $obj;
             }
         ],
+        "voteController" => [
+            "shared" => true,
+            "callback" => function () {
+                $obj = new \Marcusgsta\Vote\VoteController();
+                $obj->setDI($this);
+                return $obj;
+            }
+        ],
     ],
 ];

@@ -31,6 +31,7 @@ class AnswerController implements InjectionAwareInterface
 
         // escape output
         $newArray = array_filter($answers, function ($obj) {
+            $obj->answertitle = htmlspecialchars($obj->answertitle);
             $obj->answertext = htmlspecialchars($obj->answertext);
             return true;
         });

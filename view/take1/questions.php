@@ -1,4 +1,15 @@
 <div class="questionssection">
+<?php
+
+if ($this->di->get("loginController")->anyLoggedin() == false) {
+    $val = $this->url("user/login");
+    echo "<a href='$val'>Logga in</a>";
+
+    $val = $this->url("user/create");
+    echo "<p><a href='$val'>Registrera ny användare</a></p>";
+};
+?>
+
 <h2>De senaste frågorna</h2>
 
 <?php $url = $this->url("question/create"); ?>

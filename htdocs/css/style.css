@@ -211,6 +211,12 @@ nav {
     margin: 2px 8px 0 0;
 }
 
+/* PUBLIC PROFILE USER PAGE */
+
+#user-rank {
+    margin: 0 0 0 32px;
+    /*font-size: 1.4em;*/
+}
 
 /* TAG PAGE */
 

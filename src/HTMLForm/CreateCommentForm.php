@@ -101,6 +101,10 @@ class CreateCommentForm extends FormModel
         $comment->answerid = $answerid;
         $comment->votesum = 0;
 
+        $user = $this->di->get("userController")->getUser($userid);
+        $user->rank = $user->rank + 5;
+        $user->save();
+
         $createdDate = date("G:i:s M jS Y", time());
         $comment->created = $createdDate;
 

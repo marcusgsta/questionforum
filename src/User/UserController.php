@@ -12,6 +12,10 @@ use \Anax\User\HTMLForm\EditUserForm;
 use \Anax\User\HTMLForm\DeleteUserForm;
 use \Marcusgsta\Question\Question;
 use \Marcusgsta\Answer\Answer;
+use \Marcusgsta\Comment\Comment;
+use \Marcusgsta\Vote\VoteAnswer;
+use \Marcusgsta\Vote\VoteComment;
+use \Anax\TextFilter\TextFilter;
 
 /**
  * A controller class.
@@ -299,28 +303,25 @@ class UserController implements
         $user = $this->getUser($userid);
 
         $questions = $this->getUserQuestions($userid);
-
         $answers = $this->getUserAnswers($userid);
+        $comments = $this->getUserComments($userid);
 
         foreach ($answers as $answer) {
-            $questionid = $answer->questionid;
-            $questionObject = $this->getQuestionFromid($questionid);
-            // if answeredQuestion-array exists
-            if (isset($answeredQuestions)) {
-                // if iterated questionObject is not in array
-                if (!in_array($questionObject, $answeredQuestions)) {
-                    // add questionObject to array
-                    $answeredQuestions[] = $questionObject;
-                }
-            } else {
-                // if answeredQuestions-array does not exist (yet)
-                // add (first) questionObject to array
-                $answeredQuestions[] = $questionObject;
+            $question = $this->getQuestionFromid($answer->questionid);
+
+            if (isset($question)) {
+                $answeredQuestions[] = $question;
             }
         }
 
         $user->questions = $questions;
-        $user->answeredQuestions = $answeredQuestions;
+        $user->answeredQuestions = isset($answeredQuestions) ? $answeredQuestions : [];
+
+        $user->answers = $answers;
+
+        $user->comments = $comments;
+        $user->votesMade = $this->getUserVoteCount($userid);
+
         $acronym = $user->acronym;
         $title = $acronym . " – offentlig profil";
         $data = $user;
@@ -328,6 +329,7 @@ class UserController implements
         $pageRender->renderPage(["title" => $title]);
         return true;
     }
+
 
     /**
     * get a users questions
@@ -341,11 +343,44 @@ class UserController implements
         $where = "userid = ?";
         $value = $userid;
         $questions = $question->findAllWhere($where, $value);
+
+        $questions = array_filter($questions, function ($obj) {
+            $obj->questiontitle = htmlspecialchars($obj->questiontitle);
+            // filter output with filters
+            $textfilter = new TextFilter;
+            $obj->questiontitle = $textfilter->parse($obj->questiontitle, ["markdown"]);
+            return true;
+        });
         return $questions;
     }
 
     /**
     * get a users answered questions
+    * @param integer $userid
+    * @return array $answerobjects
+    */
+    public function getUserAnsweredQuestions($userid)
+    {
+        $answer = new Answer;
+        $answer->setDb($this->di->get("db"));
+        $where = "userid = ?";
+        $value = $userid;
+        $answers = $answer->findAllWhere($where, $value);
+
+        $newArray = array_filter($answers, function ($obj) {
+            $obj->answertitle = htmlspecialchars($obj->answertitle);
+            // filter output with filters
+            $textfilter = new TextFilter;
+            $obj->answertitle = $textfilter->parse($obj->answertitle, ["markdown"]);
+            return true;
+        });
+        $answers = $newArray;
+
+        return $answers;
+    }
+
+    /**
+    * get a users answers
     * @param integer $userid
     * @return array $questionobjects
     */
@@ -356,7 +391,46 @@ class UserController implements
         $where = "userid = ?";
         $value = $userid;
         $answers = $answer->findAllWhere($where, $value);
+
+        $newArray = array_filter($answers, function ($obj) {
+            $obj->answertitle = htmlspecialchars($obj->answertitle);
+            // filter output with filters
+            $textfilter = new TextFilter;
+            $obj->answertitle = $textfilter->parse($obj->answertitle, ["markdown"]);
+            return true;
+        });
+        $answers = $newArray;
+
         return $answers;
+    }
+
+
+    /**
+    * Get comments from userid
+    * @param integer userid
+    * @return array comments
+    */
+    public function getUserComments($userid)
+    {
+        $comments = new Comment();
+        $comments->setDb($this->di->get("db"));
+        $where = "userid = ?";
+        $value = $userid;
+        $commentObjects = $comments->findAllWhere($where, $value);
+        // escape output
+        $newArray = array_filter($commentObjects, function ($obj) {
+            // escape output
+            $obj->commenttext = htmlspecialchars($obj->commenttext);
+            // filter output with filters
+            $textfilter = new TextFilter;
+            $obj->commenttext = $textfilter->parse($obj->commenttext, ["markdown"]);
+            // create excerpts
+            $obj->excerpt = substr($obj->commenttext->text, 0, 100) . " [. . .]";
+            return true;
+        });
+        $commentObjects = $newArray;
+
+        return $commentObjects;
     }
 
     /**
@@ -390,5 +464,70 @@ class UserController implements
         $view->add("take1/users", $data);
         $pageRender->renderPage(['title' => $title]);
         return true;
+    }
+
+
+    /**
+    * get all votes made by userid
+    * @param integer userid
+    * @return integer count of votes
+    **/
+    public function getUserVoteCount($userid)
+    {
+        $questionVotes = $this->di->get("voteController")->getQuestionVotes($userid);
+        $answerVotes = $this->getAnswerVotes($userid);
+        $commentVotes = $this->getCommentVotes($userid);
+
+        $voteCount = count($questionVotes) + count($answerVotes) + count($commentVotes);
+
+        return $voteCount;
+    }
+
+
+    // /**
+    // * get all votes made by user on questions
+    // * @param integer userid
+    // * @return array votes
+    // **/
+    // public function getQuestionVotes($userid)
+    // {
+    //     $votequestion = new VoteQuestion();
+    //     $votequestion->setDb($this->di->get("db"));
+    //     $where = "userid = ?";
+    //     $value = $userid;
+    //     $votes = $votequestion->findAllWhere($where, $value);
+    //     return $votes;
+    // }
+
+
+    /**
+    * get all votes made by user on answers
+    * @param integer userid
+    * @return array votes
+    **/
+    public function getAnswerVotes($userid)
+    {
+        $voteanswer = new VoteAnswer();
+        $voteanswer->setDb($this->di->get("db"));
+        $where = "userid = ?";
+        $value = $userid;
+        $votes = $voteanswer->findAllWhere($where, $value);
+        return $votes;
+    }
+
+
+    /**
+    * get all votes made by user on comments
+    * @param integer userid
+    * @return array votes
+    **/
+    public function getCommentVotes($userid)
+    {
+        $votecomment = new VoteComment();
+        $votecomment->setDb($this->di->get("db"));
+        $where = "userid = ?";
+        $value = $userid;
+        $votes = $votecomment->findAllWhere($where, $value);
+        return $votes;
     }
 }

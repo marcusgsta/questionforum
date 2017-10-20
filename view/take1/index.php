@@ -69,6 +69,7 @@ $url = $this->url("question/show/$id"); ?>
         <h3>Mest aktiva användare</h3>
 <?php foreach ($mostActiveUsers as $user) :
     $userid = $user->id;
+    $user->count = isset($user->count) ? $user->count : 0;
     $route = $this->url("user/show/$userid");
 ?>
 <li>

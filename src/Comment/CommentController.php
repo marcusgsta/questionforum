@@ -83,6 +83,7 @@ class CommentController implements InjectionAwareInterface
         return $commentObjects;
     }
 
+
     /**
     * Get comments for one answer
     * Escape and filter commenttext-column

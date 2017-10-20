@@ -11,6 +11,7 @@ use \Marcusgsta\Answer\HTMLForm\CreateAnswerForm;
 use \Marcusgsta\Comment\CommentController;
 use \Marcusgsta\HTMLForm\CreateCommentForm;
 use \Marcusgsta\Tag\TagController;
+use \Marcusgsta\Vote\VoteQuestion;
 
 /**
  * A class for everything to do with questions.
@@ -63,8 +64,15 @@ class QuestionController implements InjectionAwareInterface
         });
 
         $questions = $newArray;
-        // Get user object and add as key to each question object
+
         $newArray = array_filter($questions, function ($obj) {
+            // get answers and add to question object
+            $answer = $this->di->get("answerController");
+            $answers = $answer->getAnswers($obj->id);
+            $obj->answers = $answers;
+            $obj->answerCount = count($answers);
+
+            // Get user object and add as key to each question object
             $user = new User;
             $user->setDb($this->di->get("db"));
             $obj->user = $user->getUser($obj->userid);
@@ -76,34 +84,66 @@ class QuestionController implements InjectionAwareInterface
     }
 
     /**
-    * Get and show a question from table
-    */
-    public function getShowQuestion($id)
+    * escape and filter a question
+    * @param object questionobject
+    * @return object question
+    **/
+    public function escapeFilterQuestion($question)
+    {
+        // escape output
+        $question->questiontitle = htmlspecialchars($question->questiontitle);
+        $question->questiontext = htmlspecialchars($question->questiontext);
+
+        // filter output with filters
+        $textfilter = new TextFilter;
+        $question->questiontitle = $textfilter->parse($question->questiontitle, ["markdown"]);
+        $question->questiontext = $textfilter->parse($question->questiontext, ["markdown"]);
+        return $question;
+    }
+
+
+
+    /**
+    * get a question from id
+    * @param integer questionid
+    * @return object question
+    **/
+    public function getQuestion($id)
+    {
+        $question = new Question();
+        $question->setDb($this->di->get("db"));
+        $question = $question->find("id", $id);
+        return $question;
+    }
+
+
+    /**
+    * show a question
+    * @param integer questionid
+    * @return object question
+    **/
+    public function showQuestion($data)
     {
         $title      = "Sida för en fråga";
         $view       = $this->di->get("view");
         $pageRender = $this->di->get("pageRender");
 
-        $question = new Question();
-        $question->setDb($this->di->get("db"));
-        $question = $question->find("id", $id);
+        $view->add("take1/question", $data);
+        $pageRender->renderPage(["title" => $title]);
+    }
 
-        // escape output
-        $question->questiontitle = htmlspecialchars($question->questiontitle);
-
-        $question->questiontext = htmlspecialchars($question->questiontext);
-
-        // filter output with filters
+    /**
+    * Get and show a question from table
+    */
+    public function getShowQuestion($id, $sortType = null)
+    {
+        $question = $this->getQuestion($id);
         $textfilter = new TextFilter;
 
-        $question->questiontitle = $textfilter->parse($question->questiontitle, ["markdown"]);
-
-        $question->questiontext = $textfilter->parse($question->questiontext, ["markdown"]);
+        $question = $this->escapeFilterQuestion($question);
 
         // Get user object and add as key to the question object
-        $user = new User;
-        $user->setDb($this->di->get("db"));
-        $question->user = $user->getUser($question->userid);
+        $question->user = $this->di->get("userController")->getUser($question->userid);
 
         // set questionid variable
         $questionid = $question->id;
@@ -116,48 +156,38 @@ class QuestionController implements InjectionAwareInterface
             $tag->tagtext = htmlspecialchars($tag->tagtext);
             $tag->tagtext = $textfilter->parse($tag->tagtext, ["markdown"]);
         }
-
         $question->tags = $tags;
         // COMMENT-FORM-QUESTION
-
         // call function to get createCommentForm for question
         $answerid = null;
         $commentFormQuestion = $this->postShowCommentForm($questionid, $answerid);
         // call function to get (escaped and filtered) comments
-        // for both questions and answers
         $allComments = $this->di->get("commentController");
         $allComments = $allComments->getComments();
-
-        // filter out comments for questions
+        // filter out comments for question
         $newArray = array_filter($allComments, function ($obj) use ($questionid) {
-
             // Get user object and add as key to the commentsQuestion object
-            $user = new User;
-            $user->setDb($this->di->get("db"));
-            $obj->user = $user->getUser($obj->userid);
-
-            // return comments that have a questionid
-            // return $obj->questionid != null;
+            $obj->user = $this->di->get("userController")->getUser($obj->userid);
+            // check if user has voted for comment
+            $comment = $this->di->get("commentController");
+            $obj->userHasVoted = $comment->userHasVoted($obj->id);
+            // return comments for questionid
             return $obj->questionid == $questionid;
         });
         $commentsQuestion = $newArray;
 
-        // ANSWERS PART
-
-        // ANSWER-FORM
-
-        // call function to get createAnswerForm
-
+        // ANSWERS PART // ANSWER-FORM
         $answerForm = $this->postCreateAnswer($questionid);
-
         // call function to get all answers to questionid
         $answer = $this->di->get("answerController");
         $answers = $answer->getAnswers($questionid);
-
-
+        // sort answer
+        if (isset($sortType)) {
+            $answers = $answer->sortAnswers($answers, $sortType);
+        }
         // COMMENTS AND COMMENT-ANSWER-FORM
         // Filter array of answers to
-        $newArray = array_filter($answers, function ($obj) {
+        $newArray = array_filter($answers, function ($obj) use ($question) {
             // get comments for each answer
             $commentsAnswer = $this->di->get("commentController");
             $commentsAnswer = $commentsAnswer->getAnswerComments($obj->id);
@@ -170,11 +200,24 @@ class QuestionController implements InjectionAwareInterface
             $obj->commentsAnswer = $commentsAnswer;
             // Get user object and add as key to each commentObject
             $newArray = array_filter($obj->commentsAnswer, function ($obj) {
-                $user = new User;
-                $user->setDb($this->di->get("db"));
-                $obj->user = $user->getUser($obj->userid);
+                $obj->user = $this->di->get("userController")->getUser($obj->userid);
+                // check if user has voted for comment
+                $comment = $this->di->get("commentController");
+                $obj->userHasVoted = $comment->userHasVoted($obj->id);
             });
+            // check if answer is accepted
+            $answer = $this->di->get("answerController");
+            $obj->accepted = $answer->isAccepted($obj->id);
+            // get answerButton
+            $obj->acceptButton = $answer->userCanAccept($question);
+            // check if user has voted for answer
+            $answer = $this->di->get("answerController");
+            $obj->userHasVoted = $answer->userHasVoted($obj->id);
         });
+        // check if question has an accepted answer
+        $answer = $this->di->get("answerController");
+        $question->hasAccepted = $answer->hasAccepted($questionid);
+        $question->userHasVoted = $this->userHasVoted($questionid);
 
         $data = [
             "question" => $question,
@@ -184,9 +227,7 @@ class QuestionController implements InjectionAwareInterface
             "answers" => $answers
         ];
 
-        $view->add("take1/question", $data);
-
-        $pageRender->renderPage(["title" => $title]);
+        $this->showQuestion($data);
     }
 
     /**
@@ -305,5 +346,68 @@ class QuestionController implements InjectionAwareInterface
             }
         }
         return $users;
+    }
+
+
+    /**
+    * vote a question up or down
+    * @param integer questionid
+    * @param integer score
+    * @return void
+    **/
+    public function vote($questionid, $score)
+    {
+        // Get userid
+        $user = $this->di->get("userController")->getLoggedinUser();
+        $userid = $user->id;
+
+        $question = $this->getQuestion($questionid);
+        $question->setDb($this->di->get("db"));
+        $question->find("id", $questionid);
+        // update
+        //$sql = "UPDATE question SET votesum = votesum + $score";
+        if ($score == 1) {
+            $question->votesum = $question->votesum + 1;
+        } elseif ($score == 0) {
+            $question->votesum = $question->votesum - 1;
+        }
+        $question->save();
+
+        // update table Votequestion to track vote
+        $votequestion = new VoteQuestion();
+        $votequestion->setDb($this->di->get("db"));
+        $votequestion->userid = $userid;
+        $votequestion->questionid = $questionid;
+        $votequestion->save();
+        // redirect to previous page
+        $url = $this->di->get("request")->getServer('HTTP_REFERER');
+        $url = $url . "#question-" . $questionid;
+        $this->di->get("response")->redirect($url);
+        return true;
+
+        // redirect to previous page
+        $url = $this->di->get("request")->getServer('HTTP_REFERER');
+        $url = $url . "#question-" . $questionid;
+        $this->di->get("response")->redirect($url);
+        return true;
+    }
+
+    /**
+    * Check if user has voted for question
+    *
+    **/
+    public function userHasVoted($questionid)
+    {
+        $user = $this->di->get("userController")->getLoggedinUser();
+        $userid = $user->id;
+
+        $votequestion = new VoteQuestion();
+        $votequestion->setDb($this->di->get("db"));
+
+        $where = "userid = ? AND questionid = ?";
+        $value = [$userid, $questionid];
+        $hasVoted = $votequestion->findWhere($where, $value);
+
+        return $hasVoted = $hasVoted == true ? true : false;
     }
 }

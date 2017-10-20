@@ -5,6 +5,8 @@ CREATE TABLE Answer (
     "answertext" TEXT NOT NULL,
     "userid" INTEGER NOT NULL,
     "questionid" INTEGER NOT NULL,
+    "votesum" INTEGER,
+    "accepted" INTEGER,
     "created" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated" DATETIME,
     "deleted" DATETIME,

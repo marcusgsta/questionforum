@@ -89,16 +89,13 @@ if (!extension_loaded('gd')) {
 
 // Specific settings for each mode
 if ($mode == 'strict') {
-
     error_reporting(0);
     ini_set('display_errors', 0);
     ini_set('log_errors', 1);
     $verbose = false;
     $status = false;
     $verboseFile = false;
-
 } elseif ($mode == 'production') {
-
     error_reporting(-1);
     ini_set('display_errors', 0);
     ini_set('log_errors', 1);
@@ -107,14 +104,12 @@ if ($mode == 'strict') {
     $verboseFile = false;
 
 } elseif ($mode == 'development') {
-
     error_reporting(-1);
     ini_set('display_errors', 1);
     ini_set('log_errors', 0);
     $verboseFile = false;
 
 } elseif ($mode == 'test') {
-
     error_reporting(-1);
     ini_set('display_errors', 1);
     ini_set('log_errors', 0);
@@ -285,7 +280,7 @@ $allowRemote = getConfig('remote_allow', false);
 
 if ($allowRemote && $passwordMatch !== false) {
     $cacheRemote = $cache->getPathToSubdir("remote");
-    
+
     $pattern = getConfig('remote_pattern', null);
     $img->setRemoteDownload($allowRemote, $cacheRemote, $pattern);
 
@@ -381,7 +376,7 @@ if ($dummyEnabled && $srcImage === $dummyFilename) {
                 matching file exists on the filesystem.',
                 404
             );
-    } 
+    }
 }
 
 if ($imagePathConstraint && !$dummyImage && !$remoteSource) {

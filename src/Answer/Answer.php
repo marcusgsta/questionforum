@@ -25,6 +25,7 @@ class Answer extends ActiveRecordModel
     public $answertext;
     public $userid;
     public $questionid;
+    public $votesum;
     public $created;
     public $updated;
     public $deleted;

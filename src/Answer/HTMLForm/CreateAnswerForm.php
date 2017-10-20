@@ -91,6 +91,7 @@ class CreateAnswerForm extends FormModel
         $answer->answertext = $answertext;
         $answer->userid = $userid;
         $answer->questionid = $questionid;
+        $answer->votesum = 0;
 
         $createdDate = date("G:i:s M jS Y", time());
         $answer->created = $createdDate;
@@ -100,6 +101,10 @@ class CreateAnswerForm extends FormModel
         $this->form->addOutput(
             "<div class='alert alert-success alert-dismissable'>" . $link . "Tack för ditt svar!</div>"
         );
+        // redirect to previous page
+        $url = $this->di->get("request")->getServer('HTTP_REFERER');
+        $url = $url . "#answer-" . $answer->id;
+        $this->di->get("response")->redirect($url);
         return true;
     }
 }

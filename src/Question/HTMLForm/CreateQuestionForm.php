@@ -92,6 +92,7 @@ class CreateQuestionForm extends FormModel
         $question->questiontitle = $questiontitle;
         $question->questiontext = $questiontext;
         $question->userid = $userid;
+        $question->votesum = 0;
 
         $createdDate = date("G:i:s M jS Y", time());
         $question->created = $createdDate;
@@ -155,6 +156,10 @@ class CreateQuestionForm extends FormModel
             "<div class='alert alert-success alert-dismissable'>"
             . $link . "Tack för din fråga!</div>"
         );
+        // redirect to previous page
+        $url = $this->di->get("request")->getServer('HTTP_REFERER');
+        $url = $url . "#question-" . $question->id;
+        $this->di->get("response")->redirect($url);
         return true;
     }
 }

@@ -99,6 +99,7 @@ class CreateCommentForm extends FormModel
         $comment->userid = $userid;
         $comment->questionid = $questionid;
         $comment->answerid = $answerid;
+        $comment->votesum = 0;
 
         $createdDate = date("G:i:s M jS Y", time());
         $comment->created = $createdDate;
@@ -109,6 +110,10 @@ class CreateCommentForm extends FormModel
             "<div class='alert alert-success alert-dismissable'>"
             . $link . "Tack för din kommentar!</div>"
         );
+        // redirect to previous page
+        $url = $this->di->get("request")->getServer('HTTP_REFERER');
+        $url = $url . "#comment-" . $comment->id;
+        $this->di->get("response")->redirect($url);
         return true;
     }
 }

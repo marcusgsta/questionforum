@@ -56,11 +56,15 @@ class Navbar
             $text = $value['text'];
             //$url = $app->url->create($route);
 
-            $html .= "<li class=\"";
+            $html .= "<li class= \"";
+            // $html .= "<li class= \"";
 
             if ($value['route'] == "") {
                 $value['route'] = "htdocs";
             }
+            // var_dump("page: $page");
+            // var_dump("route: " . $value['route']);
+            // exit;
 
             if ($page == $value['route']) {
                 //$html .= "selected";

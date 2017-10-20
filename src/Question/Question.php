@@ -25,6 +25,7 @@ class Question extends ActiveRecordModel
     public $questiontext;
     public $userid;
     public $tag;
+    public $votesum;
     public $created;
     public $updated;
     public $deleted;

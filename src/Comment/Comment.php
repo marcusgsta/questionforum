@@ -29,4 +29,5 @@ class Comment extends ActiveRecordModel
     public $updated;
     public $deleted;
     public $active;
+    public $votesum;
 }

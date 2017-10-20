@@ -5,6 +5,7 @@ CREATE TABLE Question (
     "questiontext" TEXT NOT NULL,
     "userid" INTEGER NOT NULL,
     "tag" TEXT,
+    "votesum" INTEGER,
     "created" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated" DATETIME,
     "deleted" DATETIME,

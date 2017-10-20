@@ -19,11 +19,19 @@ body {
     background-color: #f5f5f5;
 }
 
+h3 {
+    margin: 16px 0 8px 0;
+}
+
+li {
+    list-style-type:none;
+}
+
 #questionbutton {
 
 }
 
-#questionbutton {
+/*#questionbutton {
     width: 140px;
     text-align: center;
     background-color: #00a5ff;
@@ -44,7 +52,7 @@ body {
 #questionbutton a {
     text-decoration: none;
     color: #f7ffff;
-}
+}*/
 
 .clear {
     clear: both;
@@ -109,6 +117,26 @@ output {
     overflow:auto;
 }
 
+.question:first-child {
+    margin: 0;
+}
+
+.accepted {
+    margin: 0 40px 0 100px;
+}
+
+.vote-sum {
+    margin: 16px 16px 0 0;
+}
+
+.vote a {
+    color: #fff;
+    text-decoration: none;
+}
+.tags {
+    margin: 0 40px 0 200px;
+}
+
 .created {
     font-size: 1rem;
     color: #acacac;
@@ -148,9 +176,21 @@ nav {
     float:right;
 }
 
+/* ANSWERS */
+
+
+.sort-answers .active {
+    color: black;
+}
+
+.sort-answers button {
+    margin: 0 8px 0 0;
+}
+
 /* COMMENTS */
 
-.comments-question {
+.comments-question,
+.comments-answer {
     margin-left: 200px;
 }
 .comment {
@@ -162,6 +202,15 @@ nav {
 .comment-form-question {
     /*display: none;*/
 }
+
+.comment button {
+    margin: 0 0 0 4px;
+}
+
+.comment .vote-sum {
+    margin: 2px 8px 0 0;
+}
+
 
 /* TAG PAGE */
 

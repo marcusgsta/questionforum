@@ -4,6 +4,7 @@ CREATE TABLE Comment (
     "commenttext" TEXT NOT NULL,
     "questionid" INTEGER,
     "answerid" INTEGER,
+    "votesum" INTEGER DEFAULT 0,
     "userid" INTEGER NOT NULL,
     "created" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updated" DATETIME,

@@ -3,7 +3,7 @@
 
 <?php $url = $this->url("question/create"); ?>
 <div id="questionbutton" class="float-right">
-<a href="<?=$url?>" class="">Ställ en fråga</a>
+<a href="<?=$url?>" class="btn btn-primary">Ställ en fråga</a>
 </div>
 
 <?php
@@ -16,13 +16,22 @@ foreach ($questions as $question) : ?>
 <?php
 $id = $question->id;
 $url = $this->url("question/show/$id"); ?>
+
+
+
     <div class="question">
+
         <p><a href="<?=$url?>"><?=$question->questiontitle->text;?></a></p>
+
         <p><?=$question->excerpt;?> [ . . . . . . ]</p>
     </div>
 
-    <div class="share">
+    <!-- <div class="share">
         <a href="#">Share</a>
+    </div> -->
+    <div class="stats">
+        <span class="badge badge-primary"> <?=$question->votesum?></span>
+        <span class="badge badge-info"><?=$question->answerCount?> svar</span>
     </div>
     <div class="user-wrap float-right">
         <div class="created">

@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS Votecomment;
+CREATE TABLE Votecomment (
+    "userid" INTEGER NOT NULL,
+    "commentid" INTEGER NOT NULL,
+    "created" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)

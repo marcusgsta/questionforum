@@ -4,7 +4,12 @@
 
 $items = $data;
 
-$page = basename($_SERVER['REQUEST_URI']);
+// $page = basename($_SERVER['REQUEST_URI']);
+
+$page = $this->di->get("request")->getRoute();
+// echo $page;
+
+
 $values = $items['items'];
 $navbarClass = $items['config']['navbar-class'];
 ?>
@@ -21,10 +26,10 @@ $navbarClass = $items['config']['navbar-class'];
 <?php
 foreach ($values as $value) :
     $val = $this->url($value['route']);
-
-    if ($value['route'] == "") {
-        $value['route'] = "htdocs";
-    }
+    //echo $val;
+    // if ($value['route'] == "") {
+    //     $value['route'] = "htdocs";
+    // }
 
     if ($page == $value['route']) {
         $select = "selected nav-item active";

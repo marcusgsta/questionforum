@@ -24,7 +24,7 @@ $route = $this->url("question/show/$questionid/sortednewest"); ?>
     </div> <!-- end of .btn-group -->
 </div> <!-- end of .sort-answers -->
 
-<div id="answers">
+<div id="answers" class="clear">
 
 <?php foreach ($answers as $answer) : ?>
     <div class="answer clear" id="answer-<?=$answer->id?>">

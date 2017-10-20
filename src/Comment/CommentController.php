@@ -45,9 +45,11 @@ class CommentController implements InjectionAwareInterface
     }
 
     /**
-    * Get comments
+    * escape and filter comments
+    * @param array of comment objects
+    * @return array of filtered comment objects
     */
-    public function escapeAndFilterComments()
+    public function escapeAndFilterComments($commentObjects)
     {
         // escape output
         $newArray = array_filter($commentObjects, function ($obj) {
@@ -71,14 +73,7 @@ class CommentController implements InjectionAwareInterface
         $orderby = "id ASC";
         $commentObjects = $comments->findAll($orderby);
         // escape output
-        $newArray = array_filter($commentObjects, function ($obj) {
-            $obj->commenttext = htmlspecialchars($obj->commenttext);
-            // filter output with filters
-            $textfilter = new TextFilter;
-            $obj->commenttext = $textfilter->parse($obj->commenttext, ["markdown"]);
-            return true;
-        });
-        $commentObjects = $newArray;
+        $commentObjects = $this->escapeAndFilterComments($commentObjects);
 
         return $commentObjects;
     }
@@ -98,15 +93,7 @@ class CommentController implements InjectionAwareInterface
         $value = $answerid;
         $commentObjects = $comments->findAllWhere($where, $value);
         // escape output
-        $newArray = array_filter($commentObjects, function ($obj) {
-            $obj->commenttext = htmlspecialchars($obj->commenttext);
-            // filter output with filters
-            $textfilter = new TextFilter;
-            $obj->commenttext = $textfilter->parse($obj->commenttext, ["markdown"]);
-            return true;
-        });
-        $commentObjects = $newArray;
-
+        $commentObjects = $this->escapeAndFilterComments($commentObjects);
         return $commentObjects;
     }
 
@@ -135,9 +122,6 @@ class CommentController implements InjectionAwareInterface
     **/
     public function vote($commentid, $score)
     {
-        // Check if commentquestion or commentanswer
-        $type = $type == "question" ? "question" : "answer";
-
         // Get userid
         $user = $this->di->get("userController")->getLoggedinUser();
         $userid = $user->id;
@@ -190,6 +174,6 @@ class CommentController implements InjectionAwareInterface
         $value = [$userid, $commentid];
         $hasVoted = $votecomment->findWhere($where, $value);
 
-        return $hasVoted = $hasVoted == true ? true : false;
+        return $hasVoted;
     }
 }

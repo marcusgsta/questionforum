@@ -170,7 +170,6 @@ class AnswerController implements InjectionAwareInterface
         // update
         //$sql = "UPDATE answer SET accepted = 1";
 
-        $answer->setDb($this->di->get("db"));
         $answer->accepted = 1;
         $answer->save();
 
@@ -197,7 +196,8 @@ class AnswerController implements InjectionAwareInterface
         $value = [$userid, $answerid];
         $hasVoted = $voteanswer->findWhere($where, $value);
 
-        return $hasVoted = $hasVoted == true ? true : false;
+        // return $hasVoted = $hasVoted == true ? true : false;
+        return $hasVoted;
     }
 
 
@@ -214,8 +214,8 @@ class AnswerController implements InjectionAwareInterface
         $userid = $user->id;
 
         $answer = $this->getAnswer($answerid);
-        $answer->setDb($this->di->get("db"));
-        $answer->find("id", $answerid);
+        // $answer->setDb($this->di->get("db"));
+        // $answer->find("id", $answerid);
         // update
         //$sql = "UPDATE question SET votesum = votesum + $score";
         if ($score == 1) {

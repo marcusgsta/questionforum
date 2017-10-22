@@ -20,49 +20,21 @@ $answers = $data['answers'];
         <h2><?=$question->questiontitle->text;?></h2>
         <p><?=$question->questiontext->text;?></p>
 
-        <div class="vote-wrap">
-            <div class="vote-sum float-left">
-                <!-- <button type="button" class="btn btn-primary btn-sm float-left" aria-label="Left Align"> -->
-                  <span class="badge badge-info" aria-hidden="true"><?=$question->votesum;?></span>
-                <!-- </button> -->
-            </div>
-
-
+<!-- check if logged in user has written the question -->
 <?php
-$route = $this->url("question/vote/$question->id");
+$userid = $question->userid;
+$loggedinUser = $this->di->get("userController")->getLoggedinUser();
 
-switch ($this->di->get("loginController")->anyLoggedin() == false || $question->userHasVoted) :
-    case true:
-        echo '<div class="vote float-left">
-                    <button type="button" class="btn btn-primary btn-sm float-left" disabled aria-label="Left Align">
-                        <span class="glyphicon glyphicon-menu-up" aria-hidden="true">↑</span>
-                    </button>
-                <br>
-                    <button type="button" class="btn btn-primary btn-sm" disabled>
-                        <span class="glyphicon glyphicon-menu-down" aria-hidden="true">↓</span>
-                    </button>
-            </div>';
-        break;
-    case false:
-        echo "<div class='vote float-left'>
-    <!-- <a href='#'>Share</a> -->
-    <a href='" . $route . "/1" . "'>
-        <button type='button' class='btn btn-primary btn-sm float-left' aria-label='Left Align'>
-            <span class='glyphicon glyphicon-menu-up' aria-hidden='true'>↑</span>
-        </button>
-    </a>
-    <br>
-    <a href='" . $route . "/0" . "'>
-        <button type='button' class='btn btn-primary btn-sm'>
-            <span class='glyphicon glyphicon-menu-down' aria-hidden='true'>↓</span>
-        </button>
-    </a>
-</div>";
-        break;
-endswitch;?>
+if (isset($loggedinUser->id)) {
+    if ($userid == $loggedinUser->id || $loggedinUser->role == 10) {
+        include("edit-button.php");
+    };
+};
+?>
+        <!-- VOTE BUTTONS -->
+<?php include("vote-buttons.php"); ?>
 
-
-        </div> <!-- end of .vote-wrap -->
+        <!-- TAGS -->
         <div class="tags">
 <?php
 $tags = $question->tags;
@@ -78,23 +50,15 @@ foreach ($tags as $tag) :
 <?php endforeach; ?>
         </div>
 
-        <div class="user-wrap float-right">
-            <div class="created">
-                <span>Frågat <?=$question->created;?></span>
-            </div>
-            <div class="gravatar float-left">
-            <img src="<?=$question->user->gravatar;?>">
-            </div>
-            <div class="acronym">
-            <?php $userid = $question->user->id;
-                $route = $this->url("user/show/$userid");?>
-                <span><a href="<?=$route?>"><?=$question->user->acronym;?></a></span>
-            </div>
-
-        </div> <!-- end of .user-wrap -->
+        <!-- USER BADGE -->
+<?php
+$user = $question->user;
+$created = $question->created;
+$updated = $question->updated;
+include("userbadge.php");
+?>
 
     </div> <!-- end of .question -->
-
 </div> <!-- end of .question-wrap -->
 
 <div class="comments-question">
@@ -120,7 +84,7 @@ $route = $this->url("user/show/$userid"); ?>
 <!-- <a href="#" id="add-comment">Lägg till en kommentar</a> -->
 <?php
 if ($this->di->get("loginController")->anyLoggedin() == true) {
-    echo "<div class='comment-form-question clear'>" . $commentFormQuestion . "</div>";
+    echo "<a id='show-hide-form' href=''>Kommentera</a><div class='comment-form comment-form-question hidden clear'>" . $commentFormQuestion . "</div>";
 } else {
     $route = $this->url("user/login");
     echo "<p><a href='$route'>Logga in för att kommentera.</a></p>";

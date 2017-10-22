@@ -87,16 +87,16 @@ class CreateUserForm extends FormModel
         // Check password matches
         if ($password !== $passwordAgain) {
             $this->form->rememberValues();
-            $this->form->addOutput("Password did not match.");
+            $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+            $this->form->addOutput(
+                "<div class='alert alert-success alert-dismissable'>"
+                 . $link .
+                 "Lösenord matchade inte.</div>"
+            );
             return false;
         }
 
         // Save to database
-        // $db = $this->di->get("db");
-        // $password = password_hash($password, PASSWORD_DEFAULT);
-        // $db->connect()
-        //    ->insert("User", ["acronym", "password"])
-        //    ->execute([$acronym, $password]);
         $user = new User();
         $user->setDb($this->di->get("db"));
         $user->acronym = $acronym;
@@ -108,8 +108,13 @@ class CreateUserForm extends FormModel
 
         $user->setPassword($password);
         $user->save();
+        $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+        $this->form->addOutput(
+            "<div class='alert alert-success alert-dismissable'>"
+             . $link .
+             "Användaren skapades!</div>"
+        );
 
-        $this->form->addOutput("User was created.");
         return true;
     }
 }

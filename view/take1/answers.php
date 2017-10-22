@@ -1,4 +1,4 @@
-<div class="answer-wrap">
+<div class="answer-wrap" id="answer-wrap">
 
 <div class="sort-answers float-right">
     <div class="btn-group" role="group" aria-label="Basic example">
@@ -13,13 +13,13 @@ $page = $this->url($page);
 $questionid = $question->id;
 $route = $this->url("question/show/$questionid/sortedvotes"); ?>
 
-    <a href="<?=$route . '#answers'?>"><button type="button" class="btn btn-secondary" <?=$dis = $page == $route ? "disabled" : "";?>>Populäraste</button></a>
+    <a href="<?=$route . '#answer-wrap'?>"><button type="button" class="btn btn-secondary" <?=$dis = $page == $route ? "disabled" : "";?>>Populäraste</button></a>
 <?php
 $route = $this->url("question/show/$questionid/sortedoldest"); ?>
-    <a href="<?=$route . '#answers'?>"><button type="button" class="btn btn-secondary" <?=$dis = $page == $route ? "disabled" : "";?>>Äldsta</button></a>
+    <a href="<?=$route . '#answer-wrap'?>"><button type="button" class="btn btn-secondary" <?=$dis = $page == $route ? "disabled" : "";?>>Äldsta</button></a>
 <?php
 $route = $this->url("question/show/$questionid/sortednewest"); ?>
-    <a href="<?=$route . '#answers'?>"><button type="button" class="btn btn-secondary" <?=$dis = $page == $route ? "disabled" : "";?>>Nyaste</button></a>
+    <a href="<?=$route . '#answer-wrap'?>"><button type="button" class="btn btn-secondary" <?=$dis = $page == $route ? "disabled" : "";?>>Nyaste</button></a>
 
     </div> <!-- end of .btn-group -->
 </div> <!-- end of .sort-answers -->
@@ -93,26 +93,18 @@ if ($answer->accepted) {
 };
 ?>
         </div>
-
-        <div class="user-wrap float-right">
-            <div class="created">
-                <span>Svarat <?=$answer->created;?></span>
-            </div>
-            <div class="gravatar float-left">
-                <img src="<?=$answer->user->gravatar;?>">
-            </div>
-            <div class="acronym">
-<?php $userid = $answer->user->id;
-$route = $this->url("user/show/$userid");?>
-            <span><a href="<?=$route?>"><?=$answer->user->acronym;?></a></span>
-            </div>
-        </div> <!-- end of .user-wrap -->
+<?php
+$user = $answer->user;
+$created = $answer->created;
+$updated = $answer->updated;
+include("userbadge.php"); ?>
 
     </div> <!-- end of .answer -->
 
     <!-- COMMENTS FOR EACH ANSWER -->
     <div class="comments-answer">
 <?php $commentsAnswer = $answer->commentsAnswer;?>
+
     <?php foreach ($commentsAnswer as $comment) : ?>
         <div class="comment" id="comment-<?=$comment->id?>">
             <span><?=$comment->commenttext->text;?>

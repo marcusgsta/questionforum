@@ -9,7 +9,7 @@
 
 if (isset($data['gravatar'])) {
     $gravatar = $data['gravatar'];
-    echo "<img class='gravatar float-right' src='$gravatar' alt='Gravatar'>";
+    echo "<div class='user float-right gravatar'><img src='$gravatar' alt='Gravatar'></div>";
 }
 ?>
 
@@ -21,10 +21,10 @@ gravatar och e-postadress.</p>
 <p>Om du har skapat en <a href="http://gravatar.com">gravatar</a> så genereras den från din e-postadress.</p>
 
 <?php $route = $this->url("comment/delete");
-$edit_users = $this->url("user/edit-all");
-?>
+$edit_users = $this->url("user/edit-all"); ?>
 
-<p><a href="<?=$route;?>">Ta bort kommentarer</a></p>
+
+<!-- <p><a href="$route;">Ta bort kommentarer</a></p> -->
 
 <?php if (isset($role) && $role == 10) : ?>
 <p><a href="<?=$edit_users;?>">Administratör : Redigera användare</a></p>

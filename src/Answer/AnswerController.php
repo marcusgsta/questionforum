@@ -243,4 +243,23 @@ class AnswerController implements InjectionAwareInterface
         $this->di->get("response")->redirect($url);
         return true;
     }
+
+    /**
+    * get question from answerid
+    * @param integer answerid
+    * @return object question
+    **/
+    public function getQuestion($answerid)
+    {
+        $answer = new Answer;
+        $answer->setDb($this->di->get("db"));
+        $where = "id = ?";
+        $value = $answerid;
+        $answer = $answer->findWhere($where, $value);
+        $questionid = $answer->questionid;
+
+        $question = $this->di->get("questionController");
+        $question = $question->getQuestion($questionid);
+        return $question;
+    }
 }

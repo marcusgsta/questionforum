@@ -426,6 +426,12 @@ class UserController implements
             $obj->commenttext = $textfilter->parse($obj->commenttext, ["markdown"]);
             // create excerpts
             $obj->excerpt = substr($obj->commenttext->text, 0, 100) . " [. . .]";
+            // get questionid from answerid (for linking)
+            if (isset($obj->answerid)) {
+                $answer = $this->di->get("answerController");
+                $question = $answer->getQuestion($obj->answerid);
+                $obj->questionid = $question->id;
+            }
             return true;
         });
         $commentObjects = $newArray;

@@ -117,6 +117,7 @@ class CreateCommentForm extends FormModel
         // redirect to previous page
         $url = $this->di->get("request")->getServer('HTTP_REFERER');
         $url = $url . "#comment-" . $comment->id;
+        // $url = $url . "?commented=yes";
         $this->di->get("response")->redirect($url);
         return true;
     }

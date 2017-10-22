@@ -15,7 +15,7 @@ $title = $acronym;
 
 if (isset($userObject->gravatar)) {
     $gravatar = $userObject->gravatar;
-    echo "<img class='gravatar float-right' src='$gravatar' alt='Gravatar'>";
+    echo "<div class='gravatar float-right'><img src='$gravatar' alt='Gravatar'></div>";
 }
 ?>
 

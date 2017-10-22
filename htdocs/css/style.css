@@ -137,7 +137,8 @@ output {
     margin: 0 40px 0 200px;
 }
 
-.created {
+.created,
+.updated {
     font-size: 1rem;
     color: #acacac;
 }
@@ -157,6 +158,18 @@ output {
     background-color: #E0EAF1;
     padding: 8px;
     border-radius: 3px;
+}
+.card {
+    padding: 8px;
+}
+.card-outline-info {
+    /*border-color: #5bc0de;*/
+    background-color: #E0EAF1;
+    border:0;
+}
+
+.users .card-outline-info {
+    width:300px;
 }
 
 .acronym {
@@ -189,6 +202,14 @@ nav {
 
 /* COMMENTS */
 
+/*#comment-form-question {
+
+}*/
+
+.hidden {
+    display: none;
+}
+
 .comments-question,
 .comments-answer {
     margin-left: 200px;
@@ -218,7 +239,15 @@ nav {
     /*font-size: 1.4em;*/
 }
 
+/*.public-profile .gravatar {
+    border-radius: 50%;
+}*/
+
 /* TAG PAGE */
+
+.tags-section .tag {
+    background-color: #fff;
+}
 
 .tag {
     background-color: #e0eaf1;

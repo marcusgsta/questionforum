@@ -7,6 +7,7 @@ use \Anax\DI\InjectionAwareTrait;
 use \Anax\User\User;
 use \Anax\TextFilter\TextFilter;
 use \Marcusgsta\Question\HTMLForm\CreateQuestionForm;
+use \Marcusgsta\Question\HTMLForm\EditQuestionForm;
 use \Marcusgsta\Answer\HTMLForm\CreateAnswerForm;
 use \Marcusgsta\Comment\CommentController;
 use \Marcusgsta\HTMLForm\CreateCommentForm;
@@ -37,6 +38,24 @@ class QuestionController implements InjectionAwareInterface
         $pageRender->renderPage(["title" => $title]);
     }
 
+    /**
+    * Get anonymized user
+    * (if deleted >= now())
+    * @param integer userid
+    * @return object user
+    **/
+    // public function anonymizeUser($userid)
+    // {
+    //     $user = new User();
+    //     $user->acronym = "Deleted User";
+    //     $user->email = "deleted@nomail.com";
+    //     $user->gravatar = "";
+    //     $user->rank = 0;
+    //     return $user;
+    // }
+
+
+
     public function getAllQuestions()
     {
         $question = new Question();
@@ -62,6 +81,7 @@ class QuestionController implements InjectionAwareInterface
             $obj->excerpt = substr($obj->questiontext->text, 0, 500);
             return true;
         });
+
 
         $questions = $newArray;
 
@@ -90,14 +110,18 @@ class QuestionController implements InjectionAwareInterface
     **/
     public function escapeFilterQuestion($question)
     {
+
+
         // escape output
         $question->questiontitle = htmlspecialchars($question->questiontitle);
         $question->questiontext = htmlspecialchars($question->questiontext);
+
 
         // filter output with filters
         $textfilter = new TextFilter;
         $question->questiontitle = $textfilter->parse($question->questiontitle, ["markdown"]);
         $question->questiontext = $textfilter->parse($question->questiontext, ["markdown"]);
+
         return $question;
     }
 
@@ -190,7 +214,9 @@ class QuestionController implements InjectionAwareInterface
         $newArray = array_filter($answers, function ($obj) use ($question) {
             // get comments for each answer
             $commentsAnswer = $this->di->get("commentController");
+
             $commentsAnswer = $commentsAnswer->getAnswerComments($obj->id);
+
             //create a commentform for every answer
             $questionid = null; // set questionid to null
             $commentForm = $this->postShowCommentForm($questionid, $obj->id);
@@ -416,5 +442,32 @@ class QuestionController implements InjectionAwareInterface
         $hasVoted = $votequestion->findWhere($where, $value);
 
         return $hasVoted = $hasVoted == true ? true : false;
+    }
+
+
+
+    /**
+    * Edit question
+    * @param $questionid
+    *
+    **/
+    public function editQuestion($questionid)
+    {
+        $title      = "A create question page";
+        $view       = $this->di->get("view");
+        $pageRender = $this->di->get("pageRender");
+
+        //$question = $this->getQuestion($questionid);
+        $form       = new EditQuestionForm($this->di, $questionid);
+        $form->check();
+        // return $form->getHTML();
+
+        $data = [
+            "content" => $form->getHTML(),
+        ];
+
+        $view->add("default2/article", $data);
+
+        $pageRender->renderPage(["title" => $title]);
     }
 }

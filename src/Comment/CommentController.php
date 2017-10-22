@@ -82,6 +82,7 @@ class CommentController implements InjectionAwareInterface
     /**
     * Get comments for one answer
     * Escape and filter commenttext-column
+    * add questionid to answerobject (for linking to question page)
     * @param integer answerid
     * @return array commentObjects
     */
@@ -93,7 +94,15 @@ class CommentController implements InjectionAwareInterface
         $value = $answerid;
         $commentObjects = $comments->findAllWhere($where, $value);
         // escape output
+
         $commentObjects = $this->escapeAndFilterComments($commentObjects);
+        // get questionid for each answer
+        $commentObjects = array_filter($commentObjects, function ($obj) {
+            $answer = $this->di->get("answerController");
+            $obj->questionid = $answer->getQuestion($obj->answerid);
+            return true;
+        });
+
         return $commentObjects;
     }
 

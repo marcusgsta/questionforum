@@ -41,5 +41,11 @@ return [
             "path" => "vote/{id:digit}/{score:digit}",
             "callable" => ["questionController", "vote"],
         ],
+        [
+            "info" => "Edit Question.",
+            "requestMethod" => "get|post",
+            "path" => "edit/{id:digit}",
+            "callable" => ["questionController", "editQuestion"],
+        ],
     ]
 ];

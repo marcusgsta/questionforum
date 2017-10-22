@@ -5,6 +5,9 @@ namespace Anax\User\HTMLForm;
 use \Anax\HTMLForm\FormModel;
 use \Anax\DI\DIInterface;
 use \Anax\User\User;
+use \Marcusgsta\Vote\VoteQuestion;
+use \Marcusgsta\Vote\VoteAnswer;
+use \Marcusgsta\Vote\VoteComment;
 
 /**
  * Form to delete an item.
@@ -57,7 +60,8 @@ class DeleteUserForm extends FormModel
     {
         $user = new User();
         $user->setDb($this->di->get("db"));
-        $allUsers = $user->findAll();
+        $orderby = "id ASC";
+        $allUsers = $user->findAll($orderby);
 
         $users = ["-1" => "Select an item..."];
         foreach ($allUsers as $obj) {
@@ -77,10 +81,36 @@ class DeleteUserForm extends FormModel
      */
     public function callbackSubmit()
     {
+        $userid = $this->form->value("select");
+
         $user = new User();
         $user->setDb($this->di->get("db"));
-        $user->find("id", $this->form->value("select"));
-        $user->delete();
+        $user->find("id", $userid);
+
+        // set user account to deleted
+        $user->deleted = date("G:i:s M jS Y", time());
+        $user->acronym = "Raderad användare";
+        $user->email = "no@nomail.com";
+        $user->rank = 0;
+        $user->gravatar = $user->gravatar($user->email);
+        $user->password = "XYXYXY";
+        $user->role = 1;
+        $user->save();
+        // $user->delete();
+
+        // erase connections for voting
+
+        $voteQuestion = new VoteQuestion();
+        $voteQuestion->setDb($this->di->get("db"));
+        $voteQuestion->deleteWhere("userid = ?", $userid);
+
+        $voteAnswer = new VoteAnswer();
+        $voteAnswer->setDb($this->di->get("db"));
+        $voteAnswer->deleteWhere("userid = ?", $userid);
+
+        $voteComment = new VoteComment();
+        $voteComment->setDb($this->di->get("db"));
+        $voteComment->deleteWhere("userid = ?", $userid);
 
         $this->form->addOutput("Användaren raderades.");
         $this->di->get("response")->redirect("user/edit-all");

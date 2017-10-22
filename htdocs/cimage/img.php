@@ -102,18 +102,15 @@ if ($mode == 'strict') {
     $verbose = false;
     $status = false;
     $verboseFile = false;
-
 } elseif ($mode == 'development') {
     error_reporting(-1);
     ini_set('display_errors', 1);
     ini_set('log_errors', 0);
     $verboseFile = false;
-
 } elseif ($mode == 'test') {
     error_reporting(-1);
     ini_set('display_errors', 1);
     ini_set('log_errors', 0);
-
 } else {
     errorPage("Unknown mode: $mode", 500);
 }
@@ -203,7 +200,6 @@ if (!$allowHotlinking) {
         } else {
             errorPage("Hotlinking/leeching not allowed by whitelist. Referer: $referer.", 403);
         }
-
     } else {
         errorPage("Hotlinking/leeching not allowed.", 403);
     }
@@ -303,7 +299,6 @@ verbose("shortcut = $shortcut");
 
 if (isset($shortcut)
     && isset($shortcutConfig[$shortcut])) {
-
     parse_str($shortcutConfig[$shortcut], $get);
     verbose("shortcut-constant = {$shortcutConfig[$shortcut]}");
     $_GET = array_merge($_GET, $get);
@@ -341,17 +336,12 @@ preg_match($validFilename, $srcImage)
     or errorPage('Source filename contains invalid characters.', 404);
 
 if ($dummyEnabled && $srcImage === $dummyFilename) {
-
     // Prepare to create a dummy image and use it as the source image.
     $dummyImage = true;
-
 } elseif ($allowRemote && $img->isRemoteSource($srcImage)) {
-
     // If source is a remote file, ignore local file checks.
     $remoteSource = true;
-
 } else {
-
     // Check if file exists on disk or try using src-alt
     $pathToImage = realpath($imagePath . $srcImage);
 
@@ -561,12 +551,10 @@ $fillToFit = get(array('fill-to-fit', 'ff'), null);
 verbose("fill-to-fit = $fillToFit");
 
 if ($fillToFit !== null) {
-
     if (!empty($fillToFit)) {
         $bgColor   = $fillToFit;
         verbose("fillToFit changed bgColor to = $bgColor");
     }
-
     $fillToFit = true;
     verbose("fill-to-fit (fixed) = $fillToFit");
 }
@@ -885,7 +873,6 @@ $validAliasname = getConfig('valid_aliasname', '#^[a-z0-9A-Z-_]+$#');
 $aliasTarget    = null;
 
 if ($alias && $aliasPath && $passwordMatch) {
-
     $aliasTarget = $aliasPath . $alias;
     $useCache    = false;
 
@@ -894,7 +881,6 @@ if ($alias && $aliasPath && $passwordMatch) {
 
     preg_match($validAliasname, $alias)
         or errorPage('Filename for alias contains invalid characters. Do not add extension.', 404);
-
 } elseif ($alias) {
     errorPage('Alias is not enabled in the config file or password not matching.', 403);
 }
@@ -952,7 +938,6 @@ $srgbColorProfile = getConfig('srgb_colorprofile', __DIR__ . '/../icc/sRGB_IEC61
 $srgb = getDefined('srgb', true, null);
 
 if ($srgb || $srgbDefault) {
-
     $filename = $img->convert2sRGBColorSpace(
         $srcImage,
         $imagePath,

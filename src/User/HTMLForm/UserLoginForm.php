@@ -82,13 +82,27 @@ class UserLoginForm extends FormModel
 
         if (!$res) {
             $this->form->rememberValues();
-            $this->form->addOutput("User or password did not match.");
+
+            $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+            $this->form->addOutput(
+                "<div class='alert alert-danger alert-dismissable'>"
+                 . $link .
+                 "Användare eller lösenord matchade inte</div>"
+            );
+
             return false;
         }
 
         $this->di->get("loginController")->loginUser($user->acronym);
 
-        $this->form->addOutput("Användare " . $user->acronym . " loggade in.");
+        // $this->form->addOutput("Användare " . $user->acronym . " loggade in.");
+
+        $link = "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>";
+        $this->form->addOutput(
+            "<div class='alert alert-success alert-dismissable'>"
+             . $link .
+             "Användare " . $user->acronym . " loggade in</div>"
+        );
 
         return true;
     }

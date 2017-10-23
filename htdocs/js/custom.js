@@ -1,7 +1,7 @@
 "use strict";
 $(function() {
     // define variables from elements
-    let toggleLink = document.getElementById("show-hide-form");
+    var toggleLink = document.getElementById("show-hide-form");
 
     // create event listener on clicks
     if (toggleLink !== null) {

@@ -28,7 +28,7 @@ class CreateAnswerForm extends FormModel
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Svara på en fråga",
+                "legend" => "Svara",
                 "class" => "answerquestion"
             ],
             [

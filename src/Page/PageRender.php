@@ -31,8 +31,7 @@ class PageRender implements PageRenderInterface, InjectionAwareInterface
             "js/jquery-3.2.1.slim.min.js",
             "js/tether.min.js",
             "js/popper.min.js",
-            "js/bootstrap.min.js",
-            "js/custom.js"
+            "js/bootstrap.min.js"
         ];
         $data["commentableRoutes"] = ["index", "about"];
 

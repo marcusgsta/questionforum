@@ -45,9 +45,9 @@ There is a default sqlite-database included in `data/db.sqlite`. If you need to 
 
 ### Administrator usage
 Log in with username: admin and password: admin.
-You will be able to set other users as admin by creating new user and assigning them role: 10. You will also be able to edit/delete all comments and all users.
+You will be able to set other users as admin by creating new user and assigning them role: 10. You will also be able to edit/delete all users and edit all questions.
 
-Regular users can only edit/delete their own comments and their own user profile.
+Regular users can only edit/delete their own questions and their own user profile.
 
 License
 ------------------

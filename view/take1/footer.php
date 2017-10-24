@@ -1,5 +1,5 @@
 </div>
-<footer class="footer">
+<footer class="footer clear">
     <div class="container text-center">
 
 
@@ -12,7 +12,7 @@
 $val = $this->url("user/logout");
 
 if (isset($data['user'])) : ?>
-<a href="<?=$val?>" class="logout-link">Logga ut</a>
+<a href="<?=$val?>" class="logout-link btn btn-warning">Logga ut</a>
 <?php endif; ?>
 
         </div>

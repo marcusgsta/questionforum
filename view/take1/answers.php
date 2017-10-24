@@ -1,4 +1,4 @@
-<div class="answer-wrap" id="answer-wrap">
+<div class="answer-wrap clear" id="answer-wrap">
 
 <div class="sort-answers float-right">
     <div class="btn-group" role="group" aria-label="Basic example">
@@ -26,8 +26,12 @@ $route = $this->url("question/show/$questionid/sortednewest"); ?>
 
 <div id="answers" class="clear">
 
-<?php foreach ($answers as $answer) : ?>
+<?php foreach ($answers as $answer) :
+    if ($answer->accepted) : ?>
+    <div class="answer accepted-bg clear" id="answer-<?=$answer->id?>">
+<?php else : ?>
     <div class="answer clear" id="answer-<?=$answer->id?>">
+<?php endif; ?>
 
         <h2><?=$answer->answertitle->text;?></h2>
         <p><?=$answer->answertext->text;?></p>
@@ -125,9 +129,14 @@ include("userbadge.php"); ?>
 </div> <!-- end of .comments-answer -->
 
     <!-- COMMENT FORM ANSWER (ONE FOR EVERY ANSWER)-->
+<?php $answerid = $answer->id; ?>
+    <a class="btn btn-primary comment-button float-right" data-toggle="collapse" href="#comment-form-answer-<?=$answerid;?>" aria-expanded="false" aria-controls="collapseExample">
+      Ge kommentar
+    </a>
 <?php
+
 if ($this->di->get("loginController")->anyLoggedin() == true) {
-    echo "<div class='comment-form-answer'>" . $answer->commentForm . "</div>";
+    echo "<div class='comment-form-answer collapse clear' id='comment-form-answer-$answerid'>" . $answer->commentForm . "</div>";
 } else {
     $route = $this->url("user/login");
     echo "<p><a href='$route'>Logga in för att kommentera.</a></p>";
@@ -135,7 +144,7 @@ if ($this->di->get("loginController")->anyLoggedin() == true) {
 
 <?php endforeach;
 if ($this->di->get("loginController")->anyLoggedin() == true) {
-    echo "<div class='answer-section'>" . $answerForm . "</div>";
+    echo "<div class='answer-section clear'>" . $answerForm . "</div>";
 } else {
     $route = $this->url("user/login");
     echo "<a href='$route'>Logga in för att svara.</a>";

@@ -31,6 +31,54 @@ li {
 
 }
 
+.loginbutton {
+    margin: 0 12px 0 0;
+}
+
+ul.taglist {
+    list-style-type: circle;
+    margin: 12px 0 24px 0;
+    padding: 0;
+}
+
+ul.taglist li {
+    margin: 0;
+}
+
+.tags-section {
+    text-align: center;
+}
+
+.tags-section h2 {
+    text-align: center;
+    margin: 0 0 36px 0;
+}
+
+.taglist-index {
+    margin: 36px 0 24px 0;
+}
+
+.taglist-index li {
+    text-align: center;
+}
+
+h2, h3 {
+    text-align: center;
+}
+
+.taglist-index a {
+    margin: 0 12px 12px 0;
+    /*padding: 0 0 0 0;*/
+}
+
+.active-users {
+    text-align:center;
+    padding: 24px 0 0 0;
+}
+
+footer {
+    margin-top: 36px;
+}
 /*#questionbutton {
     width: 140px;
     text-align: center;
@@ -99,7 +147,7 @@ output {
 #form-element-answertext,
 #form-element-commenttext {
     width: 100%;
-    height: 300px;
+    height: 150px;
 }
 
 #form-element-tags {
@@ -115,6 +163,7 @@ output {
     padding: 16px;
     font-size: 1.3rem;
     overflow:auto;
+    border-radius: 3px;
 }
 
 .question:first-child {
@@ -123,6 +172,14 @@ output {
 
 .accepted {
     margin: 0 40px 0 100px;
+}
+
+.accepted-bg {
+    background-color: antiquewhite;
+}
+
+.sort-answers {
+    margin-bottom: 24px;
 }
 
 .vote-sum {
@@ -186,7 +243,15 @@ nav {
 }
 
 .logout-link {
+    margin: 12px 0 0 0;
     float:right;
+}
+
+.users {
+    margin: 0 auto;
+}
+.users .card {
+    margin: 0 24px 24px 0;
 }
 
 /* ANSWERS */
@@ -224,12 +289,13 @@ nav {
     /*display: none;*/
 }
 
-.comment button {
-    margin: 0 0 0 4px;
-}
 
 .comment .vote-sum {
     margin: 2px 8px 0 0;
+}
+
+.comment-button {
+    margin: 24px 0 24px 0;
 }
 
 /* PUBLIC PROFILE USER PAGE */

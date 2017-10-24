@@ -82,9 +82,10 @@ $route = $this->url("user/show/$userid"); ?>
 
 <!-- Comment Form Question -->
 <!-- <a href="#" id="add-comment">Lägg till en kommentar</a> -->
+
 <?php
 if ($this->di->get("loginController")->anyLoggedin() == true) {
-    echo "<a id='show-hide-form' href=''>Kommentera</a><div class='comment-form comment-form-question hidden clear'>" . $commentFormQuestion . "</div>";
+    echo "<a class='btn btn-primary comment-button float-right' data-toggle='collapse' href='#comment-form-question' aria-expanded='false' aria-controls='comment-form-question'>Kommentera</a><div id='comment-form-question' class='comment-form comment-form-question collapse clear'>" . $commentFormQuestion . "</div>";
 } else {
     $route = $this->url("user/login");
     echo "<p><a href='$route'>Logga in för att kommentera.</a></p>";

@@ -8,17 +8,17 @@ $tags = $data;
 
 foreach ($tags as $tag) : ?>
 
-<div class="tag-wrap">
+<div class="tag-wrap badge">
 
 <?php
 $tagid = $tag->id;
 $route = $this->url("tag/$tagid")
 ?>
-    <div class="tag">
-        <a href="<?=$route;?>">
+    <div class="tag float-left">
+        <a href="<?=$route;?>" class="btn btn-primary">
             <?=$tag->tagtext;?>
         </a>
-<ul>
+<ul class="taglist">
 <?php foreach ($tag->question as $question) :
     $questionid = $question->id;
     $route = $this->url("question/show/$questionid")

@@ -3,10 +3,10 @@
 
 if ($this->di->get("loginController")->anyLoggedin() == false) {
     $val = $this->url("user/login");
-    echo "<a href='$val'>Logga in</a>";
+    echo "<a href='$val' class='btn btn-primary float-left loginbutton'>Logga in</a>";
 
     $val = $this->url("user/create");
-    echo "<p><a href='$val'>Registrera ny användare</a></p>";
+    echo "<p><a href='$val' class='btn btn-primary'>Registrera ny användare</a></p>";
 };
 ?>
 

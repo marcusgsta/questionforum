@@ -2,8 +2,9 @@
 <h2>De senaste frågorna</h2>
 
 <?php $url = $this->url("question/create"); ?>
+
 <div id="questionbutton" class="float-right">
-<a href="<?=$url?>" class="">Ställ en fråga</a>
+<a href="<?=$url?>" class="btn btn-primary">Ställ en fråga</a>
 </div>
 
 <?php
@@ -24,7 +25,7 @@ $url = $this->url("question/show/$id"); ?>
     </div>
 
     <div class="share">
-        <a href="#">Share</a>
+        
     </div>
     <div class="user-wrap float-right">
         <div class="created">
@@ -51,21 +52,23 @@ $url = $this->url("question/show/$id"); ?>
 <div class="tag-section">
 
 <h3>Populäraste taggar:</h3>
+<ul class="taglist-index">
 <?php foreach ($popularTags as $tag) :
     $tagid = $tag->id;
     $route = $this->url("tag/$tagid")
 ?>
 
 <li>
-    <a href="<?=$route;?>">
+    <a href="<?=$route;?>" class="btn btn-primary float-left">
         <?=$tag->tagtext . "  (" . $tag->count . ")";?>
     </a>
 </li>
 
 <?php endforeach; ?>
+</ul>
 </div> <!-- end of tag-section -->
 
-<div class="active-users">
+<div class="active-users clear">
         <h3>Mest aktiva användare</h3>
 <?php foreach ($mostActiveUsers as $user) :
     $userid = $user->id;
